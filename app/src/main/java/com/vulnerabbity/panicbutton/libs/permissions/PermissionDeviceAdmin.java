@@ -8,11 +8,11 @@ import android.content.Intent;
 
 import com.vulnerabbity.panicbutton.receivers.DeviceAdminReceiver;
 
-public class PermissionManagerDeviceAdmin implements PermissionManager {
+public class PermissionDeviceAdmin implements Permission {
   private Activity activity;
   private static final int CODE_ENABLE_PERMISSION = 1;
 
-  public PermissionManagerDeviceAdmin(Activity activity) {
+  public PermissionDeviceAdmin(Activity activity) {
     this.activity = activity;
   }
 
