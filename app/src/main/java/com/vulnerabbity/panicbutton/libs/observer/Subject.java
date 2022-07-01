@@ -15,7 +15,7 @@ public class Subject<T> {
     return newSub;
   }
 
-  void next(T newValue) {
+  public void next(T newValue) {
     notifySubscribers(newValue);
   }
 
