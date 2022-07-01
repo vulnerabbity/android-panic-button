@@ -15,13 +15,28 @@ public class AppNotificationsBuilder {
   }
 
   public Notification buildNotification(NotificationConfig config) {
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
-            .setSmallIcon(config.icon)
-            .setContentTitle(config.title)
-            .setContentText(config.text).setOngoing(config.cantClose);
-
-    Notification notification = notificationBuilder.build();
+    Notification notification = makeCompatNotificationBuilder(config).build();
 
     return notification;
+  }
+
+  private NotificationCompat.Builder makeCompatNotificationBuilder(NotificationConfig config) {
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
+            .setSmallIcon(config.icon)
+            .setOngoing(config.cantClose);
+
+    if (config.title != null) {
+      notificationBuilder.setContentTitle(config.title);
+    }
+
+    if (config.text != null) {
+      notificationBuilder.setContentText(config.text);
+    }
+    if (config.isPublic) {
+      notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+    }
+
+    return notificationBuilder;
   }
 }
