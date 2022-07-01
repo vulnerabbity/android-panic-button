@@ -40,7 +40,7 @@ public class PanicActionReceiver extends BroadcastReceiver {
   }
 
   private void emitNotificationClicked() {
-    Logger.log("notificationClicked");
+    Logger.log(ACTION_NAME);
     ApplicationEvents.NotificationClicked$.next("notificationClicked");
   }
 }
