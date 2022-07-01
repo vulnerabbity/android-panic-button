@@ -1,9 +1,5 @@
 package com.vulnerabbity.panicbutton.libs.observer;
 
-import java.util.function.Function;
-
-
-
 public class Subscription<T> {
   private Boolean _isSubscribed = true;
   private LambdaCallback<T> _callback;
