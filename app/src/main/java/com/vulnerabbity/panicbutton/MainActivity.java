@@ -26,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
     notificationsManager = new AppNotificationsManager(this);
   }
 
+  @Override
+  protected void onDestroy() {
+    destroyNotification();
+    super.onDestroy();
+  }
+
   public void onStartClick(View v) {
     Boolean isAdminApp = permissionsManager.deviceAdmin.isGranted();
     if (isAdminApp) {
@@ -41,5 +47,9 @@ public class MainActivity extends AppCompatActivity {
     config.title = "Facebook";
     config.text = "John sent you message. Swipe to view";
     this.notificationsManager.displayLockListeningNotification(config);
+  }
+
+  private void destroyNotification() {
+    this.notificationsManager.destroyNotification(new NotificationConfig().id);
   }
 }

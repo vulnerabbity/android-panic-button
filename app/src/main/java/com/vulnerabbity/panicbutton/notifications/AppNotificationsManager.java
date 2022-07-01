@@ -15,6 +15,10 @@ public class AppNotificationsManager {
     notificationsBuilder = new AppNotificationsBuilder(context);
   }
 
+  public void destroyNotification(int notificationId) {
+    getNotificationManager().cancel(notificationId);
+  }
+
   public void displayNotification(NotificationConfig config) {
     Notification notification = notificationsBuilder.buildNotification(config);
 
