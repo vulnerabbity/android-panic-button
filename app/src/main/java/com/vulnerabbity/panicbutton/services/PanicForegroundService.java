@@ -54,6 +54,11 @@ public class PanicForegroundService extends Service {
     ApplicationEvents.panicModeEnabled$.subscribe((event) -> {
       displayNotification();
     });
+
+    ApplicationEvents.panicNotificationClosed$.subscribe((event) -> {
+      hideNotification();
+    });
+
     ApplicationEvents.panicModeDisabled$.subscribe((event) -> {
       hideNotification();
     });
