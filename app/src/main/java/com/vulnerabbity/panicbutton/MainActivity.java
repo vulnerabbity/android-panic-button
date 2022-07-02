@@ -1,17 +1,16 @@
 package com.vulnerabbity.panicbutton;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.vulnerabbity.panicbutton.events.ApplicationEvents;
+import com.vulnerabbity.panicbutton.libs.panic.PanicActions;
 import com.vulnerabbity.panicbutton.libs.permissions.PermissionsManager;
 import com.vulnerabbity.panicbutton.libs.storage.registry.StorageRegistry;
 import com.vulnerabbity.panicbutton.services.PanicForegroundService;
 import com.vulnerabbity.panicbutton.services.ServiceRunner;
-import com.vulnerabbity.panicbutton.utils.logger.Logger;
 
 public class MainActivity extends AppCompatActivity {
   private PermissionsManager permissionsManager;
@@ -24,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     permissionsManager = new PermissionsManager(this);
     storage = new StorageRegistry(this);
+    new MainActivityUI(this).initUi();
 
     initPanicMode();
   }
@@ -34,6 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
   public void onStopClick(View v) {
     stopPanicMode();
+  }
+
+  public void setFirstPanicActionToNone(View view) {
+    this.storage.panicAction1.set(PanicActions.NONE);
+  }
+
+  public void setFirstPanicActionToLock(View view) {
+    this.storage.panicAction1.set(PanicActions.LOCK);
+  }
+
+  public void setSecondPanicActionToNone(View view) {
+    this.storage.panicAction2.set(PanicActions.NONE);
+  }
+
+  public void setSecondPanicActionToLock(View view) {
+    this.storage.panicAction2.set(PanicActions.LOCK);
   }
 
   private void startListeningForPanicIfAdmin() {
@@ -54,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
   private Boolean isPanicModeEnabled() {
     Boolean isEnabled = storage.isPanicEnabled.get();
-    Logger.log(isEnabled.toString());
     return isEnabled;
   }
 
