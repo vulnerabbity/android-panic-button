@@ -8,13 +8,7 @@ public class StorageRecordIsPanicEnabled extends  StorageRecord<Boolean> {
   }
 
   @Override
-  protected String getRecordKey() {
-    return StorageRecordIsPanicEnabled.class.toString();
-  }
-
-  @Override
   protected Boolean getDefaultValue() {
     return false;
   }
-
 }

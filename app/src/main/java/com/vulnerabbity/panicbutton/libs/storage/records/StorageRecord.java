@@ -18,7 +18,10 @@ public abstract class StorageRecord<T> {
     return (T) _get();
   }
 
-  protected abstract String getRecordKey();
+  protected String getRecordKey() {
+    return this.getClass().toString();
+  };
+
   protected abstract T getDefaultValue();
 
   public void set(T valueToSave) {
