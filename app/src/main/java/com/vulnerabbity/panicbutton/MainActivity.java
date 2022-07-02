@@ -10,6 +10,7 @@ import com.vulnerabbity.panicbutton.events.ApplicationEvents;
 import com.vulnerabbity.panicbutton.libs.permissions.PermissionsManager;
 import com.vulnerabbity.panicbutton.libs.storage.registry.StorageRegistry;
 import com.vulnerabbity.panicbutton.services.PanicForegroundService;
+import com.vulnerabbity.panicbutton.services.ServiceRunner;
 import com.vulnerabbity.panicbutton.utils.logger.Logger;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,12 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
   private void startPanicService() {
     Intent intent = new Intent(this, PanicForegroundService.class);
-    // foreground service available since api 26
-    if (Build.VERSION.SDK_INT >= 26) {
-      Logger.log("started foreground");
-      startForegroundService(intent);
-    }
-    Logger.log("started service");
-    startService(intent);
+    new ServiceRunner(this).runService(intent);
   }
 }
