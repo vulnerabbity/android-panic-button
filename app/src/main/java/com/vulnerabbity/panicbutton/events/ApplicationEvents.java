@@ -4,4 +4,6 @@ import com.vulnerabbity.panicbutton.libs.observer.Subject;
 
 public class ApplicationEvents {
   public static Subject<String> panicActionCalled$ = new Subject();
+  public static Subject<String> panicModeEnabled$ = new Subject();
+  public static Subject<String> panicModeDisabled$ = new Subject();
 }
