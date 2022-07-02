@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.vulnerabbity.panicbutton">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 
     <application
         android:allowBackup="true"
@@ -34,6 +36,7 @@
             </intent-filter>
         </receiver>
 
+        <service android:name="com.vulnerabbity.panicbutton.services.PanicForegroundService"/>
     </application>
 
 </manifest>
