@@ -18,7 +18,11 @@ public class PanicListener {
   }
 
   private void startHandlingEvents() {
-    ApplicationEvents.panicActionCalled$.subscribe((e) -> {
+    ApplicationEvents.panicAction1Called$.subscribe((e) -> {
+      callPanicIfPanicMode();
+    });
+
+    ApplicationEvents.panicAction2Called$.subscribe((e) -> {
       callPanicIfPanicMode();
     });
 
