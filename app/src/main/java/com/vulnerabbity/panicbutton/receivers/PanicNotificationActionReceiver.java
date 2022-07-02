@@ -9,12 +9,11 @@ import android.content.IntentFilter;
 import com.vulnerabbity.panicbutton.events.ApplicationEvents;
 import com.vulnerabbity.panicbutton.utils.logger.Logger;
 
-/**
- * Listens for clicks on notifications which have PendingIntent from here
- */
-public class PanicActionReceiver extends BroadcastReceiver {
-  private static final String ACTION_NAME = "panic_action";
+class PanicActions {
+  
+}
 
+public class PanicActionReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
