@@ -18,32 +18,37 @@ public class PanicListener {
   }
 
   private void startHandlingEvents() {
-    ApplicationEvents.panicAction1Called$.subscribe((e) -> {
-      callPanicIfPanicMode();
+    ApplicationEvents.panicAction1Called$.subscribe((event) -> {
+      if (isPanicMode()) {
+        String panicAction = this.storage.panicAction1.get();
+        executePanic(panicAction);
+      }
     });
 
-    ApplicationEvents.panicAction2Called$.subscribe((e) -> {
-      callPanicIfPanicMode();
+    ApplicationEvents.panicAction2Called$.subscribe((event) -> {
+      if (isPanicMode()) {
+        String panicAction = this.storage.panicAction2.get();
+        executePanic(panicAction);
+      }
     });
 
-    ApplicationEvents.panicModeEnabled$.subscribe((e) -> {
+    ApplicationEvents.panicModeEnabled$.subscribe((event) -> {
       enablePanicMode();
     });
 
-    ApplicationEvents.panicModeDisabled$.subscribe((e) -> {
+    ApplicationEvents.panicModeDisabled$.subscribe((event) -> {
       disablePanicMode();
     });
   }
 
-  private void callPanicIfPanicMode() {
-    if (isPanicMode()) {
-      this.callPanicAction();
+  private void executePanic(String panicAction) {
+    if (panicAction == PanicActions.LOCK) {
+      panicExecutor.lockDevice();
+    } else if (panicAction == PanicActions.NONE) {
+      Logger.log("Panic action is 'none'");
+    } else {
+      Logger.error(panicAction + " is unknown panic action; cant execute");
     }
-  }
-
-  private void callPanicAction() {
-    Logger.log("Panic executed");
-    this.panicExecutor.lockDevice();
   }
 
   private void enablePanicMode() {
