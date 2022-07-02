@@ -12,6 +12,6 @@ public class NotificationConfig {
   public Boolean cantClose = false;
   public Boolean isPublic = false;
 
-  public int icon = R.drawable.ic_launcher_background;
+  public int icon = R.mipmap.ic_launcher;
   public int id = 0;
 }
