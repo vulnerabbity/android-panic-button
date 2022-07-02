@@ -6,8 +6,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
-import com.vulnerabbity.panicbutton.utils.logger.Logger;
+import com.vulnerabbity.panicbutton.R;
+import com.vulnerabbity.panicbutton.receivers.PanicNotificationActionReceiver;
 
 /**
  * Builds notifications from config
@@ -15,9 +17,11 @@ import com.vulnerabbity.panicbutton.utils.logger.Logger;
 public class AppNotificationsBuilder {
   private Context context;
   private final String NOTIFICATION_CHANNEL_ID = "default channel";
+  private NotificationConfig defaultConfig;
 
   public AppNotificationsBuilder(Context context) {
     this.context = context;
+    this.defaultConfig = new NotificationConfig();
     // android 8+ requires to create notification channel to send notification
     createNotificationChannel();
   }
@@ -26,15 +30,32 @@ public class AppNotificationsBuilder {
 
     NotificationCompat.Builder builder = makeCompatNotificationBuilder(config);
     Notification notification = builder.build();
-    notification.defaults = 0;
-    notification.sound = null;
+    makeNotificationSilent(notification);
 
     return notification;
   }
 
+  public Notification buildPanicNotification() {
+    RemoteViews panicNotificationLayout = new RemoteViews(this.context.getPackageName(), R.layout.panic_notification);
+    PanicNotificationActionReceiver.addListeningToNotification(context, panicNotificationLayout);
+
+    NotificationCompat.Builder builder = makeCompatNotificationBuilder();
+    builder.setContent(panicNotificationLayout);
+    builder.setSmallIcon(defaultConfig.icon);
+
+    Notification panicNotification = builder.build();
+    makeNotificationSilent(panicNotification);
+
+    return panicNotification;
+  }
+
+  private NotificationCompat.Builder makeCompatNotificationBuilder() {
+    return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
+  }
+
   private NotificationCompat.Builder makeCompatNotificationBuilder(NotificationConfig config) {
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(config.icon)
+
+    NotificationCompat.Builder notificationBuilder = makeCompatNotificationBuilder().setSmallIcon(config.icon)
             .setOngoing(config.cantClose);
 
     if (config.title != null) {
@@ -44,9 +65,9 @@ public class AppNotificationsBuilder {
     if (config.text != null) {
       notificationBuilder.setContentText(config.text);
     }
+
     if (config.isPublic) {
       notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-
     }
 
     return notificationBuilder;
@@ -68,5 +89,10 @@ public class AppNotificationsBuilder {
     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
     return notificationManager;
+  }
+
+  private void makeNotificationSilent(Notification notification) {
+    notification.defaults = 0;
+    notification.sound = null;
   }
 }

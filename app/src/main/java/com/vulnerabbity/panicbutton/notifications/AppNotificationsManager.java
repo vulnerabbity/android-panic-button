@@ -4,7 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 
-import com.vulnerabbity.panicbutton.receivers.PanicActionReceiver;
+import com.vulnerabbity.panicbutton.receivers.PanicNotificationActionReceiver;
 
 public class AppNotificationsManager {
   private Context context;
@@ -25,18 +25,10 @@ public class AppNotificationsManager {
     display(notification, config.id);
   }
 
-  public void displayLockListeningNotification(NotificationConfig config) {
-    Notification notification = notificationsBuilder.buildNotification(config);
+  public void displayPanicNotification(int notificationId) {
+    Notification panicNotification = notificationsBuilder.buildPanicNotification();
 
-    addLockListeningToNotification(notification);
-    display(notification, config.id);
-  }
-
-  private void addLockListeningToNotification(Notification notification) {
-    // on click
-    notification.contentIntent = PanicActionReceiver.getPendingIntent(this.context);
-    // on close swipe
-    notification.deleteIntent = PanicActionReceiver.getPendingIntent(this.context);
+    display(panicNotification, notificationId);
   }
 
   private void display(Notification notification, int id) {
