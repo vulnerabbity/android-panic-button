@@ -11,6 +11,8 @@ import android.widget.RemoteViews;
 import com.vulnerabbity.panicbutton.R;
 import com.vulnerabbity.panicbutton.receivers.PanicNotificationActionReceiver;
 
+// todo: make separate class for panic and default notification
+
 /**
  * Builds notifications from config
  */
@@ -42,6 +44,7 @@ public class AppNotificationsBuilder {
     NotificationCompat.Builder builder = makeCompatNotificationBuilder();
     builder.setContent(panicNotificationLayout);
     builder.setSmallIcon(defaultConfig.icon);
+    builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
     Notification panicNotification = builder.build();
     makeNotificationSilent(panicNotification);
