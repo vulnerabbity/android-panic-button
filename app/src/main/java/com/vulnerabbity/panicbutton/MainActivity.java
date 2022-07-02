@@ -1,55 +1,82 @@
 package com.vulnerabbity.panicbutton;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.vulnerabbity.panicbutton.libs.panic.PanicListener;
+import com.vulnerabbity.panicbutton.events.ApplicationEvents;
 import com.vulnerabbity.panicbutton.libs.permissions.PermissionsManager;
-import com.vulnerabbity.panicbutton.notifications.AppNotificationsManager;
-import com.vulnerabbity.panicbutton.notifications.NotificationConfig;
-import com.vulnerabbity.panicbutton.receivers.PanicActionReceiver;
+import com.vulnerabbity.panicbutton.libs.storage.registry.StorageRegistry;
+import com.vulnerabbity.panicbutton.services.PanicForegroundService;
+import com.vulnerabbity.panicbutton.utils.logger.Logger;
 
 public class MainActivity extends AppCompatActivity {
   private PermissionsManager permissionsManager;
-  private AppNotificationsManager notificationsManager;
+  private StorageRegistry storage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    PanicActionReceiver.register(this);
-    new PanicListener(this);
-
     permissionsManager = new PermissionsManager(this);
-    notificationsManager = new AppNotificationsManager(this);
-  }
+    storage = new StorageRegistry(this);
 
-  @Override
-  protected void onDestroy() {
-    destroyNotification();
-    super.onDestroy();
+    initPanicMode();
   }
 
   public void onStartClick(View v) {
-    Boolean isAdminApp = permissionsManager.deviceAdmin.isGranted();
-    if (isAdminApp) {
-      displayNotification();
+    startListeningForPanicIfAdmin();
+  }
+
+  public void onStopClick(View v) {
+    stopPanicMode();
+  }
+
+  private void startListeningForPanicIfAdmin() {
+    if (isAdminPermissionGranted()) {
+      enablePanicMode();
     } else {
       permissionsManager.deviceAdmin.request();
     }
   }
 
-  private void displayNotification() {
-    NotificationConfig config = new NotificationConfig();
-    config.isPublic = true;
-    config.title = "Facebook";
-    config.text = "John sent you message. Swipe to view";
-    this.notificationsManager.displayLockListeningNotification(config);
+  private void initPanicMode() {
+    this.startPanicService();
+
+    if (isPanicModeEnabled()) {
+      this.enablePanicMode();
+    }
   }
 
-  private void destroyNotification() {
-    this.notificationsManager.destroyNotification(new NotificationConfig().id);
+  private Boolean isPanicModeEnabled() {
+    Boolean isEnabled = storage.isPanicEnabled.get();
+    Logger.log(isEnabled.toString());
+    return isEnabled;
+  }
+
+  private void enablePanicMode() {
+    ApplicationEvents.panicModeEnabled$.next("panic mode enabled");
+  }
+
+  private void stopPanicMode() {
+    ApplicationEvents.panicModeDisabled$.next("panic mode disabled");
+  }
+
+  private Boolean isAdminPermissionGranted() {
+    return permissionsManager.deviceAdmin.isGranted();
+  }
+
+  private void startPanicService() {
+    Intent intent = new Intent(this, PanicForegroundService.class);
+    // foreground service available since api 26
+    if (Build.VERSION.SDK_INT >= 26) {
+      Logger.log("started foreground");
+      startForegroundService(intent);
+    }
+    Logger.log("started service");
+    startService(intent);
   }
 }
