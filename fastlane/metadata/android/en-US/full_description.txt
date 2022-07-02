@@ -1,0 +1,17 @@
+Notification panic button which can save you
+
+Use of fingerprint or face authentication is not safe.
+But typing password every time not much better especially in front of "security cameras".
+
+This application displays notification with configurable panic buttons.
+
+Features:
+- Force lock panic action: allows to disable face and fingerprint authentication until enter password
+
+Use cases:
+- You in trouble
+- You notice someone suspicious
+- Police, goverment or bandits want you to unlock your smartphone
+
+Future features:
+- Sending http request to your server to notify your team, family, etc
